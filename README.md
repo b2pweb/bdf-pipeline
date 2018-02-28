@@ -22,9 +22,6 @@ $pipeline = new Pipeline([], new PipeProcessor());
 $pipeline->pipe(function($value) {
     return $value + 2;
 });
-$pipeline->outlet(function($value) {
-    return $value;
-});
 
 // Returns 12
 $pipeline->send(10);
@@ -48,9 +45,11 @@ $pipeline->pipe(function($next, $foo, $bar) {
     
     return $result;
 });
-
+$pipeline->outlet(function($foo, $bar) {
+    return "${foo}.${bar}";
+});
 // Manage multiple parameters
-$pipeline->send('foo', 'bar');
+echo $pipeline->send('foo', 'bar'); // Print foo.bar
 ```
 
 ## Ok, So ?
