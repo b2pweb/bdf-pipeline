@@ -52,7 +52,7 @@ $pipeline->outlet(function($foo, $bar) {
 echo $pipeline->send('foo', 'bar'); // Print foo.bar
 ```
 
-## Ok, So ?
+## Ok, So ? 
 
 You can use this package as a classic pipe, but it was designed to be easily extended:
 
