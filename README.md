@@ -1,6 +1,7 @@
 ## B2PWeb Pipeline
 
 [![Build Status](https://travis-ci.org/b2pweb/pipeline.svg?branch=master)](https://travis-ci.org/b2pweb/pipeline)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/b2pweb/bdf-pipeline/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/b2pweb/bdf-pipeline/?branch=master)
 
 
 ### Usage Instructions
