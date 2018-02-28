@@ -48,6 +48,9 @@ $pipeline->pipe(function($next, $foo, $bar) {
     
     return $result;
 });
+
+// Manage multiple parameters
+$pipeline->send('foo', 'bar');
 ```
 
 ## Ok, So ?
