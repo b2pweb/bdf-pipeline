@@ -2,7 +2,13 @@
   "name": "b2pweb/bdf-pipeline",
   "description": "Bdf Pipeline component",
   "type": "library",
-  "license": "proprietary",
+  "keywords": ["pipeline", "pattern", "design pattern"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sébastien Tanneux"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Bdf\\Pipeline\\": "src"
