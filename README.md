@@ -1,5 +1,7 @@
 ## B2PWeb Pipeline
 
+[![Build Status](https://travis-ci.org/b2pweb/pipeline.svg?branch=master)](https://travis-ci.org/b2pweb/pipeline)
+
 
 ### Usage Instructions
 
