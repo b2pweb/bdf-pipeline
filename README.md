@@ -4,6 +4,8 @@ A PHP Pipeline pattern.
 
 [![Build Status](https://travis-ci.org/b2pweb/pipeline.svg?branch=master)](https://travis-ci.org/b2pweb/pipeline)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/b2pweb/bdf-pipeline/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/b2pweb/bdf-pipeline/?branch=master)
+[![Packagist Version](https://img.shields.io/packagist/v/b2pweb/bdf-pipeline.svg)](https://packagist.org/packages/b2pweb/bdf-pipeline)
+[![Total Downloads](https://img.shields.io/packagist/dt/b2pweb/bdf-pipeline.svg)](https://packagist.org/packages/b2pweb/bdf-pipeline)
 
 ## Install via composer
 ```bash
@@ -84,3 +86,7 @@ class TransactionnalCommand
     }
 }
 ```
+
+## License
+
+Distributed under the terms of the MIT license.
