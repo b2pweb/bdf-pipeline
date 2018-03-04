@@ -121,6 +121,38 @@ class PipelineTest extends TestCase
 
         $this->assertSame(646, $pipeline->send(3));
     }
+
+    /**
+     *
+     */
+    public function test_clone_empty_pipe()
+    {
+        $pipeline = new Pipeline();
+        $new = clone $pipeline;
+
+        $pipeline->pipe(new Add(30));
+
+        $this->assertNotSame($new, $pipeline);
+        $this->assertSame(1, $new->send(1));
+        $this->assertSame(31, $pipeline->send(1));
+    }
+
+    /**
+     *
+     */
+    public function test_clone_pipe()
+    {
+        $pipeline = new Pipeline();
+        $pipeline->pipe(new Add(10));
+        $pipeline->pipe(new Add(20));
+
+        $new = clone $pipeline;
+
+        $pipeline->pipe(new Add(30));
+
+        $this->assertSame(31, $new->send(1));
+        $this->assertSame(61, $pipeline->send(1));
+    }
 }
 
 //-------------
@@ -137,6 +169,11 @@ class Add
     public function __invoke($next, $number)
     {
         return $next($this->value + $number);
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
     }
 }
 class Double

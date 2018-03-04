@@ -131,4 +131,14 @@ final class Pipeline
 
         return $callback(...$payload);
     }
+
+    /**
+     * Clone the pipes
+     */
+    public function __clone()
+    {
+        if ($this->first !== null) {
+            $this->first = clone $this->first;
+        }
+    }
 }

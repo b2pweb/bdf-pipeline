@@ -75,4 +75,14 @@ final class Pipe
     {
         return $this->processor->process($this->callback, $payload, $this->next);
     }
+
+    /**
+     * Clone the pipe
+     */
+    public function __clone()
+    {
+        if ($this->next instanceof self) {
+            $this->next = clone $this->next;
+        }
+    }
 }
