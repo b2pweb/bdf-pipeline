@@ -87,6 +87,20 @@ class TransactionnalCommand
 }
 ```
 
+The pipeline is reusable:
+
+```PHP
+$pipeline = new Pipeline();
+$pipeline->pipe(new Double());
+
+$new = clone $pipeline;
+
+$new->pipe(new Double());
+
+echo $pipeline->send(2); // 4
+echo $new->send(2); // 8
+```
+
 ## License
 
 Distributed under the terms of the MIT license.
