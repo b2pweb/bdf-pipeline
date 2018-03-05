@@ -33,7 +33,7 @@ The pipeline lib comes with an advanced processor (used by default).
 
 ```PHP
 use Bdf\Pipeline\Pipeline;
-use Bdf\Pipeline\Processor\PipeProcessor;
+use Bdf\Pipeline\Processor\StackProcessor;
 
 $pipeline = new Pipeline([], new StackProcessor());
 $pipeline->pipe(function($next, $foo, $bar) {
