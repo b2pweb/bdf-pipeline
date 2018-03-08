@@ -87,7 +87,11 @@ final class Pipeline
     }
 
     /**
-     * {@inheritdoc}
+     * Pipeline invokation
+     *
+     * @param array $payload
+     *
+     * @return mixed
      */
     public function __invoke(...$payload)
     {
