@@ -2,7 +2,6 @@
 
 namespace Bdf\Pipeline;
 
-use Bdf\Pipeline\Pipe\Pipe;
 use Bdf\Pipeline\Processor\StackProcessor;
 
 /**
@@ -10,28 +9,21 @@ use Bdf\Pipeline\Processor\StackProcessor;
  *
  * @author Sébastien Tanneux
  */
-final class Pipeline implements PipeInterface
+final class Pipeline
 {
     /**
-     * The pipe processor
+     * The pipes processor
      *
      * @var ProcessorInterface
      */
     private $processor;
 
     /**
-     * The first pipe from the chain
+     * The pipes
      *
-     * @var Pipe
+     * @var callable[]
      */
-    private $first;
-
-    /**
-     * The last pipe from the chain
-     *
-     * @var Pipe
-     */
-    private $last;
+    private $pipes;
 
     /**
      * The destination of the last pipe
@@ -49,15 +41,7 @@ final class Pipeline implements PipeInterface
     public function __construct(array $pipes = [], ProcessorInterface $processor = null)
     {
         $this->processor = $processor ?: new StackProcessor();
-
-        // Set the default outlet
-        $this->outlet = function($payload) {
-            return $payload;
-        };
-
-        foreach ($pipes as $pipe) {
-            $this->pipe($pipe);
-        }
+        $this->pipes = $pipes;
     }
 
     /**
@@ -67,7 +51,7 @@ final class Pipeline implements PipeInterface
      */
     public function prepend($first)
     {
-        $this->add($first, true);
+        array_unshift($this->pipes, $first);
     }
 
     /**
@@ -77,49 +61,7 @@ final class Pipeline implements PipeInterface
      */
     public function pipe($last)
     {
-        $this->add($last);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @internal
-     */
-    public function setNext(callable $pipe)
-    {
-        if ($pipe instanceof PipeInterface) {
-            $this->add($pipe);
-        } else {
-            $this->outlet($pipe);
-        }
-    }
-
-    /**
-     * Add a pipe
-     *
-     * @param callable|PipeInterface $pipe
-     * @param boolean $prepend
-     */
-    private function add($pipe, $prepend = false)
-    {
-        if (! $pipe instanceof PipeInterface) {
-            $pipe = new Pipe($this->processor, $pipe);
-        }
-
-        // Set the outlet on last pipe
-        $pipe->setNext($this->outlet);
-
-        // Detect the first pipe
-        if ($this->first === null) {
-            $this->first = $pipe;
-            $this->last = $pipe;
-        } elseif ($prepend === false) {
-            $this->last->setNext($pipe);
-            $this->last = $pipe;
-        } else {
-            $pipe->setNext($this->first);
-            $this->first = $pipe;
-        }
+        $this->pipes[] = $last;
     }
 
     /**
@@ -130,10 +72,6 @@ final class Pipeline implements PipeInterface
     public function outlet(callable $outlet)
     {
         $this->outlet = $outlet;
-
-        if ($this->last !== null) {
-            $this->last->setNext($outlet);
-        }
     }
 
     /**
@@ -145,9 +83,7 @@ final class Pipeline implements PipeInterface
      */
     public function send(...$payload)
     {
-        $callback = $this->first ?: $this->outlet;
-
-        return $callback(...$payload);
+        return $this->processor->process($this->pipes, $payload, $this->outlet);
     }
 
     /**
@@ -155,16 +91,16 @@ final class Pipeline implements PipeInterface
      */
     public function __invoke(...$payload)
     {
+        // TODO works only with PipeProcessor
         return $this->send(...$payload);
     }
 
     /**
-     * Clone the pipes
+     * Clone the processor and clear its cache
      */
     public function __clone()
     {
-        if ($this->first !== null) {
-            $this->first = clone $this->first;
-        }
+        $this->processor = clone $this->processor;
+        $this->processor->clearCache();
     }
 }

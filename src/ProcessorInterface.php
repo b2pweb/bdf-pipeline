@@ -12,11 +12,16 @@ interface ProcessorInterface
     /**
      * Process a callback from pipeline
      *
-     * @param callable $callback
+     * @param callable[] $pipes
      * @param array $payload
-     * @param callable $next
+     * @param callable|null $outlet
      *
      * @return mixed
      */
-    public function process($callback, $payload, $next);
+    public function process(array $pipes, array $payload, callable $outlet = null);
+
+    /**
+     * Clear processor cache
+     */
+    public function clearCache();
 }

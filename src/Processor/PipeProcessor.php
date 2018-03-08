@@ -14,8 +14,26 @@ class PipeProcessor implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function process($callback, $payload, $next)
+    public function process(array $pipes, array $payload, callable $outlet = null)
     {
-        return $next($callback(...$payload));
+        $payload = $payload[0] ?? null;
+
+        foreach ($pipes as $pipe) {
+            $payload = $pipe($payload);
+        }
+
+        if ($outlet !== null) {
+            return $outlet($payload);
+        }
+
+        return $payload;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearCache()
+    {
+
     }
 }
