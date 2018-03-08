@@ -5,7 +5,7 @@ namespace Bdf\Pipeline;
 /**
  * ProcessorInterface
  *
- * @author Johnmeurt
+ * @author Sébastien Tanneux
  */
 interface ProcessorInterface
 {

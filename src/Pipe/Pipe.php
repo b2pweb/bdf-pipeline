@@ -1,15 +1,18 @@
 <?php
 
-namespace Bdf\Pipeline;
+namespace Bdf\Pipeline\Pipe;
+
+use Bdf\Pipeline\PipeInterface;
+use Bdf\Pipeline\ProcessorInterface;
 
 /**
- * Pipe
+ * A pipe
  *
  * @internal
  *
- * @author Johnmeurt
+ * @author Sébastien Tanneux
  */
-final class Pipe
+final class Pipe implements PipeInterface
 {
     /**
      * The callback processor
@@ -33,7 +36,7 @@ final class Pipe
     private $next;
 
     /**
-     * PipeInterface constructor
+     * Pipe constructor
      *
      * @param ProcessorInterface $processor
      * @param callable $callback
@@ -45,9 +48,7 @@ final class Pipe
     }
 
     /**
-     * Set the next pipe
-     *
-     * @param callable $pipe
+     * {@inheritdoc}
      */
     public function setNext(callable $pipe)
     {
@@ -65,11 +66,7 @@ final class Pipe
     }
 
     /**
-     * Invoke pipe
-     *
-     * @param array $payload
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function __invoke(...$payload)
     {
@@ -81,7 +78,7 @@ final class Pipe
      */
     public function __clone()
     {
-        if ($this->next instanceof self) {
+        if ($this->next instanceof PipeInterface) {
             $this->next = clone $this->next;
         }
     }

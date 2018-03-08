@@ -153,6 +153,50 @@ class PipelineTest extends TestCase
         $this->assertSame(31, $new->send(1));
         $this->assertSame(61, $pipeline->send(1));
     }
+
+    /**
+     *
+     */
+    public function test_chain_pipeline()
+    {
+        $embedded = new Pipeline();
+        $embedded->pipe(new Add(10));
+        $embedded->pipe(new Add(20));
+        $embedded->outlet(function($value) {
+            // Will not be called
+            return -1 * $value;
+        });
+
+        $pipeline = new Pipeline();
+        $pipeline->pipe(new Add(30));
+        $pipeline->pipe($embedded);
+        $pipeline->pipe(new Add(40));
+        $embedded->pipe(new Add(40));
+
+        $this->assertSame(141, $pipeline->send(1));
+    }
+
+    /**
+     *
+     */
+    public function test_clone_chain_pipeline()
+    {
+        $embedded = new Pipeline();
+        $embedded->pipe(new Add(10));
+        $embedded->pipe(new Add(20));
+
+        $pipeline = new Pipeline();
+        $pipeline->pipe(new Add(30));
+        $pipeline->pipe($embedded);
+        $pipeline->pipe(new Add(40));
+
+        $new = clone $pipeline;
+
+        $pipeline->pipe(new Add(40));
+
+        $this->assertSame(101, $new->send(1));
+        $this->assertSame(141, $pipeline->send(1));
+    }
 }
 
 //-------------

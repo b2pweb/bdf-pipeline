@@ -7,7 +7,7 @@ use Bdf\Pipeline\ProcessorInterface;
 /**
  * StackProcessor
  *
- * @author Johnmeurt
+ * @author Sébastien Tanneux
  */
 class StackProcessor implements ProcessorInterface
 {

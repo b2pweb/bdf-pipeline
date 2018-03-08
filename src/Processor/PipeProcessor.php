@@ -7,7 +7,7 @@ use Bdf\Pipeline\ProcessorInterface;
 /**
  * PipeProcessor
  *
- * @author Johnmeurt
+ * @author Sébastien Tanneux
  */
 class PipeProcessor implements ProcessorInterface
 {
