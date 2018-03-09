@@ -20,7 +20,7 @@ A basic and classic use of pipeline with a pipe processor.
 use Bdf\Pipeline\Pipeline;
 use Bdf\Pipeline\CallableFactory\LinkedCallableFactory;
 
-$pipeline = new Pipeline([], new LinkedCallableFactory());
+$pipeline = new Pipeline(new LinkedCallableFactory());
 $pipeline->pipe(function($value) {
     return $value + 2;
 });
@@ -35,7 +35,7 @@ The pipeline lib comes with an advanced processor (used by default).
 use Bdf\Pipeline\Pipeline;
 use Bdf\Pipeline\CallableFactory\StackCallableFactory;
 
-$pipeline = new Pipeline([], new StackCallableFactory());
+$pipeline = new Pipeline(new StackCallableFactory());
 $pipeline->pipe(function($next, $foo, $bar) {
     // Do something
     ...
