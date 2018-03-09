@@ -23,11 +23,7 @@ class StackProcessor implements ProcessorInterface
      */
     public function process(array $pipes, array $payload, callable $outlet = null)
     {
-        if ($this->callable === null) {
-            $this->callable = $this->buildCallable($pipes, $outlet);
-        }
-
-        $callable = $this->callable;
+        $callable = $this->getCallable($pipes, $outlet);
 
         return $callable(...$payload);
     }
@@ -40,14 +36,18 @@ class StackProcessor implements ProcessorInterface
      *
      * @return \Closure
      */
-    private function buildCallable($pipes, $outlet)
+    private function getCallable($pipes, $outlet)
     {
-        $callable = function (...$payload) use($outlet) {
-            if ($outlet !== null) {
-                return $outlet(...$payload);
-            }
+        if ($this->callable !== null) {
+            return $this->callable;
+        }
 
-            return $payload[0] ?? null;
+        if ($outlet !== null) {
+            $callable = $outlet;
+        } else {
+            $callable = function ($payload) {
+                return $payload;
+            };
         };
 
         while ($pipe = array_pop($pipes)) {

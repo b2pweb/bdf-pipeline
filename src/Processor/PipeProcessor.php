@@ -16,7 +16,7 @@ class PipeProcessor implements ProcessorInterface
      */
     public function process(array $pipes, array $payload, callable $outlet = null)
     {
-        $payload = $payload[0] ?? null;
+        $payload = $payload[0];
 
         foreach ($pipes as $pipe) {
             $payload = $pipe($payload);
