@@ -23,9 +23,10 @@ class PipelineTest extends TestCase
     /**
      *
      */
-    public function test_pipeline()
+    public function test_set_pipes()
     {
-        $pipeline = new Pipeline([new Add(10), new Double]);
+        $pipeline = new Pipeline();
+        $pipeline->setPipes([new Add(10), new Double]);
 
         $this->assertSame(22, $pipeline->send(1));
     }
@@ -111,7 +112,7 @@ class PipelineTest extends TestCase
      */
     public function test_linked_callable()
     {
-        $pipeline = new Pipeline([], new LinkedCallableFactory());
+        $pipeline = new Pipeline(new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(10));
         $pipeline->pipe(new DoublePipe);
         $pipeline->pipe(new SquarePipe);
@@ -175,7 +176,7 @@ class PipelineTest extends TestCase
      */
     public function test_chain_pipeline()
     {
-        $embedded = new Pipeline([], new LinkedCallableFactory());
+        $embedded = new Pipeline(new LinkedCallableFactory());
         $embedded->pipe(new AddPipe(10));
         $embedded->pipe(new AddPipe(20));
         $embedded->outlet(function($value) {
@@ -183,7 +184,7 @@ class PipelineTest extends TestCase
             return -1 * $value;
         });
 
-        $pipeline = new Pipeline([], new LinkedCallableFactory());
+        $pipeline = new Pipeline(new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(30));
         $pipeline->pipe($embedded);
         $pipeline->pipe(new AddPipe(40));
@@ -197,11 +198,11 @@ class PipelineTest extends TestCase
      */
     public function test_clone_chain_pipeline()
     {
-        $embedded = new Pipeline([], new LinkedCallableFactory());
+        $embedded = new Pipeline(new LinkedCallableFactory());
         $embedded->pipe(new AddPipe(10));
         $embedded->pipe(new AddPipe(20));
 
-        $pipeline = new Pipeline([], new LinkedCallableFactory());
+        $pipeline = new Pipeline(new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(30));
         $pipeline->pipe($embedded);
         $pipeline->pipe(new AddPipe(40));

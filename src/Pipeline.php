@@ -23,7 +23,7 @@ final class Pipeline
      *
      * @var callable[]
      */
-    private $pipes;
+    private $pipes = [];
 
     /**
      * The destination of the last pipe
@@ -42,12 +42,20 @@ final class Pipeline
     /**
      * Pipeline constructor.
      *
-     * @param array $pipes
      * @param CallableFactoryInterface $factory
      */
-    public function __construct(array $pipes = [], CallableFactoryInterface $factory = null)
+    public function __construct(CallableFactoryInterface $factory = null)
     {
         $this->factory = $factory ?: new StackCallableFactory();
+    }
+
+    /**
+     * Set the pipes
+     *
+     * @param callable[] $pipes
+     */
+    public function setPipes(array $pipes)
+    {
         $this->pipes = $pipes;
     }
 
