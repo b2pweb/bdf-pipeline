@@ -53,40 +53,56 @@ final class Pipeline
      * Set the pipes
      *
      * @param callable[] $pipes
+     *
+     * @return $this
      */
     public function setPipes(array $pipes)
     {
         $this->pipes = $pipes;
+
+        return $this;
     }
 
     /**
      * Add a pipe at the beginning of the chain
      *
      * @param callable $first
+     *
+     * @return $this
      */
     public function prepend($first)
     {
         array_unshift($this->pipes, $first);
+
+        return $this;
     }
 
     /**
      * Add a pipe
      *
      * @param callable $last
+     *
+     * @return $this
      */
     public function pipe($last)
     {
         $this->pipes[] = $last;
+
+        return $this;
     }
 
     /**
      * Set the pipeline outlet
      *
      * @param callable $outlet
+     *
+     * @return $this
      */
     public function outlet(callable $outlet)
     {
         $this->outlet = $outlet;
+
+        return $this;
     }
 
     /**

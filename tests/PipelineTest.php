@@ -36,13 +36,13 @@ class PipelineTest extends TestCase
      */
     public function test_complex_pipeline()
     {
-        $pipeline = new Pipeline();
-        $pipeline->pipe(new Add(10));
-        $pipeline->pipe(new Double);
-        $pipeline->pipe(new Square);
-        $pipeline->outlet(function($payload) {
-            return $payload - 30;
-        });
+        $pipeline = (new Pipeline())
+            ->pipe(new Add(10))
+            ->pipe(new Double)
+            ->pipe(new Square)
+            ->outlet(function($payload) {
+                return $payload - 30;
+            });
 
         $this->assertSame(646, $pipeline->send(3));
     }
