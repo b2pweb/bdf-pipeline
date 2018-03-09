@@ -2,7 +2,7 @@
 
 namespace Bdf\Pipeline;
 
-use Bdf\Pipeline\Processor\PipeProcessor;
+use Bdf\Pipeline\CallableFactory\LinkedCallableFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -109,9 +109,9 @@ class PipelineTest extends TestCase
     /**
      *
      */
-    public function test_pipe_processor()
+    public function test_linked_callable()
     {
-        $pipeline = new Pipeline([], new PipeProcessor());
+        $pipeline = new Pipeline([], new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(10));
         $pipeline->pipe(new DoublePipe);
         $pipeline->pipe(new SquarePipe);
@@ -120,6 +120,22 @@ class PipelineTest extends TestCase
         });
 
         $this->assertSame(646, $pipeline->send(3));
+    }
+
+    /**
+     *
+     */
+    public function test_multi_args()
+    {
+        $pipeline = new Pipeline();
+        $pipeline->pipe(function($next, $foo, $bar) {
+            return $next($foo, $bar);
+        });
+        $pipeline->outlet(function($foo, $bar) {
+            return "$foo.$bar";
+        });
+
+        $this->assertSame('foo.bar', $pipeline->send('foo', 'bar'));
     }
 
     /**
@@ -159,7 +175,7 @@ class PipelineTest extends TestCase
      */
     public function test_chain_pipeline()
     {
-        $embedded = new Pipeline([], new PipeProcessor());
+        $embedded = new Pipeline([], new LinkedCallableFactory());
         $embedded->pipe(new AddPipe(10));
         $embedded->pipe(new AddPipe(20));
         $embedded->outlet(function($value) {
@@ -167,7 +183,7 @@ class PipelineTest extends TestCase
             return -1 * $value;
         });
 
-        $pipeline = new Pipeline([], new PipeProcessor());
+        $pipeline = new Pipeline([], new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(30));
         $pipeline->pipe($embedded);
         $pipeline->pipe(new AddPipe(40));
@@ -181,11 +197,11 @@ class PipelineTest extends TestCase
      */
     public function test_clone_chain_pipeline()
     {
-        $embedded = new Pipeline([], new PipeProcessor());
+        $embedded = new Pipeline([], new LinkedCallableFactory());
         $embedded->pipe(new AddPipe(10));
         $embedded->pipe(new AddPipe(20));
 
-        $pipeline = new Pipeline([], new PipeProcessor());
+        $pipeline = new Pipeline([], new LinkedCallableFactory());
         $pipeline->pipe(new AddPipe(30));
         $pipeline->pipe($embedded);
         $pipeline->pipe(new AddPipe(40));

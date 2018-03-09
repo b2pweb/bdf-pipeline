@@ -2,7 +2,7 @@
 
 namespace Bdf\Pipeline;
 
-use Bdf\Pipeline\Processor\StackProcessor;
+use Bdf\Pipeline\CallableFactory\StackCallableFactory;
 
 /**
  * Pipeline
@@ -12,11 +12,11 @@ use Bdf\Pipeline\Processor\StackProcessor;
 final class Pipeline
 {
     /**
-     * The pipes processor
+     * The callable factory
      *
-     * @var ProcessorInterface
+     * @var CallableFactoryInterface
      */
-    private $processor;
+    private $factory;
 
     /**
      * The pipes
@@ -33,14 +33,21 @@ final class Pipeline
     private $outlet;
 
     /**
+     * The built callable
+     *
+     * @var callable
+     */
+    private $callable;
+
+    /**
      * Pipeline constructor.
      *
      * @param array $pipes
-     * @param ProcessorInterface $processor
+     * @param CallableFactoryInterface $factory
      */
-    public function __construct(array $pipes = [], ProcessorInterface $processor = null)
+    public function __construct(array $pipes = [], CallableFactoryInterface $factory = null)
     {
-        $this->processor = $processor ?: new StackProcessor();
+        $this->factory = $factory ?: new StackCallableFactory();
         $this->pipes = $pipes;
     }
 
@@ -83,7 +90,12 @@ final class Pipeline
      */
     public function send(...$payload)
     {
-        return $this->processor->process($this->pipes, $payload, $this->outlet);
+        if ($this->callable === null) {
+            $this->callable = $this->factory->createCallable($this->pipes, $this->outlet);
+        }
+
+        $callable = $this->callable;
+        return $callable(...$payload);
     }
 
     /**
@@ -95,16 +107,15 @@ final class Pipeline
      */
     public function __invoke(...$payload)
     {
-        // TODO works only with PipeProcessor
+        // TODO works only with LinkedCallableFactory
         return $this->send(...$payload);
     }
 
     /**
-     * Clone the processor and clear its cache
+     * Clear the callable
      */
     public function __clone()
     {
-        $this->processor = clone $this->processor;
-        $this->processor->clearCache();
+        $this->callable = null;
     }
 }
