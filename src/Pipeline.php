@@ -131,8 +131,7 @@ final class Pipeline
      */
     public function __invoke(...$payload)
     {
-        // TODO works only with LinkedCallableFactory
-        return $this->send(...$payload);
+        return $this->factory->callPipeline($this, $payload);
     }
 
     /**

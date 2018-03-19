@@ -28,4 +28,12 @@ class LinkedCallableFactory implements CallableFactoryInterface
             return $payload;
         };
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function callPipeline($pipeline, array $payload)
+    {
+        return $pipeline->send(...$payload);
+    }
 }

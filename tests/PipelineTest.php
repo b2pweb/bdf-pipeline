@@ -3,6 +3,7 @@
 namespace Bdf\Pipeline;
 
 use Bdf\Pipeline\CallableFactory\LinkedCallableFactory;
+use Bdf\Pipeline\CallableFactory\StackCallableFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -174,13 +175,12 @@ class PipelineTest extends TestCase
     /**
      *
      */
-    public function test_chain_pipeline()
+    public function test_chain_pipeline_for_linked_callable()
     {
         $embedded = new Pipeline(new LinkedCallableFactory());
         $embedded->pipe(new AddPipe(10));
         $embedded->pipe(new AddPipe(20));
         $embedded->outlet(function($value) {
-            // Will not be called
             return -1 * $value;
         });
 
@@ -191,6 +191,40 @@ class PipelineTest extends TestCase
         $embedded->pipe(new AddPipe(40));
 
         $this->assertSame(-61, $pipeline->send(1));
+    }
+
+    /**
+     *
+     */
+    public function test_chain_pipeline_for_stack_callable()
+    {
+        $input = new \ArrayObject();
+        $input['value'] = 0;
+
+        $embedded = new Pipeline(new StackCallableFactory());
+        $embedded->pipe(function($next, $input) {
+            $input['value'] += 10;
+            $next($input);
+        });
+        $embedded->pipe(function($next, $input) {
+            $input['value'] += 20;
+            $next($input);
+        });
+
+        $pipeline = new Pipeline(new StackCallableFactory());
+        $pipeline->pipe(function($next, $input) {
+            $input['value'] += 30;
+            $next($input);
+        });
+        $pipeline->pipe($embedded);
+        $pipeline->pipe(function($next, $input) {
+            $input['value'] += 40;
+            $next($input);
+        });
+
+        $pipeline->send($input);
+
+        $this->assertSame(100, $input['value']);
     }
 
     /**

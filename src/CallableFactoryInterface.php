@@ -18,4 +18,14 @@ interface CallableFactoryInterface
      * @return callable
      */
     public function createCallable(array $pipes, callable $outlet = null);
+
+    /**
+     * Invoke a pipeline
+     *
+     * @param Pipeline $pipeline
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function callPipeline($pipeline, array $payload);
 }

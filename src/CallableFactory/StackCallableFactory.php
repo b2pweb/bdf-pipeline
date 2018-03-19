@@ -32,4 +32,16 @@ class StackCallableFactory implements CallableFactoryInterface
 
         return $callable;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function callPipeline($pipeline, array $payload)
+    {
+        $next = array_shift($payload);
+
+        $pipeline->send(...$payload);
+
+        return $next(...$payload);
+    }
 }
