@@ -58,6 +58,7 @@ final class Pipeline
      */
     public function setPipes(array $pipes)
     {
+        $this->clear();
         $this->pipes = $pipes;
 
         return $this;
@@ -72,6 +73,7 @@ final class Pipeline
      */
     public function prepend($first)
     {
+        $this->clear();
         array_unshift($this->pipes, $first);
 
         return $this;
@@ -86,6 +88,7 @@ final class Pipeline
      */
     public function pipe($last)
     {
+        $this->clear();
         $this->pipes[] = $last;
 
         return $this;
@@ -100,6 +103,7 @@ final class Pipeline
      */
     public function outlet(callable $outlet)
     {
+        $this->clear();
         $this->outlet = $outlet;
 
         return $this;
@@ -138,6 +142,14 @@ final class Pipeline
      * Clear the callable
      */
     public function __clone()
+    {
+        $this->clear();
+    }
+
+    /**
+     * Clear the callable
+     */
+    private function clear()
     {
         $this->callable = null;
     }
